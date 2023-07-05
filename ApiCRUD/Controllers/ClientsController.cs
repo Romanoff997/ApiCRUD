@@ -1,9 +1,11 @@
 ﻿using ApiCRUD.Domain.Repositories;
 using ApiCRUD.Models;
 using ApiCRUD.Models.Client;
+using ApiCRUD.Services;
 using CRUD_Сlients_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -37,13 +39,11 @@ namespace ApiCRUD.Controllers
             {
                 ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
                 bool validation = true;
-                Type myType = typeof(ClientInfoModel);
-                var myField = myType.GetProperty(sortBy);
-               // FieldInfo field = myField.Where(x => x.Name.Equals(sortBy)).FirstOrDefault();
-                if (myField == null)
+
+                if (TypeVisorService.GetTypeField(sortBy, typeof(ClientInfoModel)) == null)
                 {
                     validation = false;
-                    errorClientResponseModel.exception.Add(new ExceptionClientResponse() { field = "sortBy", message = $"not find field{sortBy}" }); ;
+                    errorClientResponseModel.exception.Add(new ExceptionClientResponse() { field = "sortBy", message = $"not find field {sortBy}" }); ;
                 }
 
                 if (limit <= 0)
@@ -51,6 +51,7 @@ namespace ApiCRUD.Controllers
                     validation = false;
                     errorClientResponseModel.exception.Add(new ExceptionClientResponse() { field = "limit", message = "get it limit>0" });
                 }
+
                 if (!(sortDir.Equals("asc") || sortDir.Equals("desc")))
                 {
                     validation = false;
@@ -61,6 +62,7 @@ namespace ApiCRUD.Controllers
                 {
                     errorClientResponseModel.status = 422;
                     errorClientResponseModel.code = "VALIDATION_EXCEPTION";
+                    //throw new BadRequestException("dfd");
                     return BadRequest(errorClientResponseModel);
                 }
                 else
@@ -73,7 +75,6 @@ namespace ApiCRUD.Controllers
                         page = page,
                         limit = limit, 
                         data = arrayClient.ToArray(),
-                        //page
                     });
 
                 }
@@ -107,10 +108,13 @@ namespace ApiCRUD.Controllers
                     name = ViewClient.name,
                     patronymic = ViewClient.patronymic,
                     surname = ViewClient.surname,
-                    сhildren = JsonSerializer.Serialize(ViewClient.сhildren)
+                    сhildren = JsonSerializer.Serialize(ViewClient.сhildren),
+                    jobs = JsonSerializer.Serialize(ViewClient.jobs)
                 };
-                await _dataManager.ClientRepository.clientCreateAsync(client);
-                return Ok(new CreateClientResponce {id= client.id });
+                var id = await _dataManager.ClientRepository.clientCreateAsync(client);
+                if (id == null)
+                    throw new Exception("клиент не создан");
+                return Ok(new CreateClientResponce {id= new Guid(id.ToString()) });
             }
             catch (Exception ex)
             {

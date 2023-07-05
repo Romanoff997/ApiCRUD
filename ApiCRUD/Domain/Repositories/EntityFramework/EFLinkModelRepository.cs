@@ -84,14 +84,6 @@ namespace ApiCRUD.Domain.Repositories.EntityFramework
             _context.ClientEntity.Attach(product);
             _context.ClientEntity.Remove(product);
             await _context.SaveChangesAsync();
-
-            //using (var ctx = new StoreContext())
-            //{
-            //    var product = new ClientInfoModel() { id = new Guid(id.ToString()) };
-            //    _context.ClientEntity.Attach(product);
-            //    _context.ClientEntity.Remove(product);
-            //    await _context.SaveChangesAsync();
-            //}
         }
 
     }
