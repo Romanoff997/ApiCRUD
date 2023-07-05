@@ -3,6 +3,8 @@ using ApiCRUD.Domain.Repositories.EntityFramework;
 using ApiCRUD.Domain.Repositories;
 using ApiCRUD.Services;
 using Microsoft.EntityFrameworkCore;
+using ApiCRUD.Helpers;
+
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -16,6 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IClientModelRepository, EFClientModelRepository>();;
+builder.Services.AddTransient<JsonNewtonConverter>();
 builder.Services.AddTransient<DataManager>();
 var app = builder.Build();
 

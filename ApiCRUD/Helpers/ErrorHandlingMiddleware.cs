@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 using ApiCRUD.Models;
+using ApiCRUD.Services;
 
-namespace ApiCRUD.Services
+namespace ApiCRUD.Helpers
 {
     public class ErrorHandlerMiddleware
     {
@@ -13,11 +14,11 @@ namespace ApiCRUD.Services
         private readonly ILogger _logger;
         private readonly IJsonConverter _converter;
 
-        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
+        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger, JsonNewtonConverter converter)
         {
             _next = next;
             _logger = logger;
-            _converter = new JsonNewtonConverter();
+            _converter = converter;
         }
 
         public async Task Invoke(HttpContext context)

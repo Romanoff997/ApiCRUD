@@ -71,9 +71,6 @@ namespace ApiCRUD.Domain.Repositories.EntityFramework
         }
         public async Task clientDeteleAsync(Guid id)
         {
-            if (id == null)
-                return;
-
             var product = new ClientInfoModel() { id = id };
             _context.ClientEntity.Attach(product);
             _context.ClientEntity.Remove(product);

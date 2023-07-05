@@ -29,17 +29,16 @@ namespace ApiCRUD.Controllers
 
         private readonly DataManager _dataManager;
         private readonly IJsonConverter _converter;
-        public clientsController(DataManager dataManager)
+        public clientsController(DataManager dataManager, JsonNewtonConverter converter)
         {
             _dataManager = dataManager;
-            _converter = new JsonNewtonConverter();
+            _converter = converter;
         }
         // GET api/clients
         [HttpGet]
         public async Task<ActionResult> clientList(string sortBy = "createdAt", string sortDir = "asc", int limit = 10, int page = 1, string? search=null)
         {
-            //try
-            //{
+
                 bool validation = true;
                 Dictionary<string, string> vlidationErrorMessage = new Dictionary<string, string>();
                 if (TypeVisorService.GetTypeField(sortBy, typeof(ClientInfoModel)) == null)
@@ -95,8 +94,7 @@ namespace ApiCRUD.Controllers
                     //jobs = JsonSerializer.Serialize(ViewClient.jobs)
                 };
                 var id = await _dataManager.ClientRepository.clientCreateAsync(client);
-                //if (id == null)
-                   // throw new Exception("клиент не создан");
+
                 return Ok(new CreateClientResponce {id= new Guid(id.ToString()) });
             }
 
@@ -106,22 +104,13 @@ namespace ApiCRUD.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
-                errorClientResponseModel.status = 422;
-                errorClientResponseModel.code = "VALIDATION_EXCEPTION";
-                return BadRequest(errorClientResponseModel);
+                throw new ApplicationException();
             }
 
             var client = await _dataManager.ClientRepository.clientGetAsync(id);
 
-            if (client != null)
-                return Ok(client);
+            return Ok(client);
 
-            return BadRequest(new ErrorClientResponseModel()
-            {
-                status = 500,
-                code = "INTERNAL_SERVER_ERROR"
-            });
             
         }
 
@@ -131,25 +120,11 @@ namespace ApiCRUD.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
-                errorClientResponseModel.status = 422;
-                errorClientResponseModel.code = "VALIDATION_EXCEPTION";
-                return BadRequest(errorClientResponseModel);
+                throw new ApplicationException();
             }
-            try
-            {
 
-                await _dataManager.ClientRepository.clientUpdateAsync(new Guid(id.ToString()), client);
-                return Ok("Данные клиента успешо обновленны");
-            }
-            catch (Exception ex) 
-            {
-                return BadRequest(new ErrorClientResponseModel()
-                {
-                    status = 500,
-                    code = "INTERNAL_SERVER_ERROR"
-                });
-            }
+            await _dataManager.ClientRepository.clientUpdateAsync(new Guid(id.ToString()), client);
+            return Ok("Данные клиента успешо обновленны");
         }
 
         // DELETE api/clients/{id}
@@ -158,25 +133,13 @@ namespace ApiCRUD.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
-                errorClientResponseModel.status = 422;
-                errorClientResponseModel.code = "VALIDATION_EXCEPTION";
-                return BadRequest(errorClientResponseModel);
+                throw new ApplicationException();
             }
-            try
-            {
 
-                await _dataManager.ClientRepository.clientDeteleAsync(id);
-                return Ok("Клиент удален");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ErrorClientResponseModel()
-                {
-                    status = 500,
-                    code = "INTERNAL_SERVER_ERROR"
-                });
-            }
+            await _dataManager.ClientRepository.clientDeteleAsync(id);
+            return Ok("Клиент удален");
+
+
             
         }
     }
