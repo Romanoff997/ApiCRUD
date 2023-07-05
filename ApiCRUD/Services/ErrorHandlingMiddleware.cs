@@ -3,7 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
-
+using ApiCRUD.Models;
 
 namespace ApiCRUD.Services
 {
@@ -11,12 +11,13 @@ namespace ApiCRUD.Services
     {
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
-
+        private readonly IJsonConverter _converter;
 
         public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
         {
             _next = next;
             _logger = logger;
+            _converter = new JsonNewtonConverter();
         }
 
         public async Task Invoke(HttpContext context)
@@ -29,25 +30,25 @@ namespace ApiCRUD.Services
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
-
+                ErrorClientResponseModel errorResponse = new ErrorClientResponseModel();
                 switch (error)
                 {
-                    case AppException e:
+                    case ApplicationException e:
                         // custom application error
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        break;
-                    case KeyNotFoundException e:
-                        // not found error
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
+                        errorResponse.status = (int)HttpStatusCode.BadRequest;
+                        errorResponse.code = e.Message;
                         break;
                     default:
                         // unhandled error
                         _logger.LogError(error, error.Message);
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        errorResponse.status = (int)HttpStatusCode.InternalServerError;
+                        errorResponse.code = "INTERNAL_SERVER_ERROR";
                         break;
                 }
 
-                var result = JsonSerializer.Serialize(new { message = error?.Message });
+                var result = _converter.WriteJson(errorResponse);
                 await response.WriteAsync(result);
             }
         }

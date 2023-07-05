@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -27,43 +28,41 @@ namespace ApiCRUD.Controllers
     {
 
         private readonly DataManager _dataManager;
+        private readonly IJsonConverter _converter;
         public clientsController(DataManager dataManager)
         {
             _dataManager = dataManager;
+            _converter = new JsonNewtonConverter();
         }
         // GET api/clients
         [HttpGet]
         public async Task<ActionResult> clientList(string sortBy = "createdAt", string sortDir = "asc", int limit = 10, int page = 1, string? search=null)
         {
-            try
-            {
-                ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
+            //try
+            //{
                 bool validation = true;
-
+                Dictionary<string, string> vlidationExeprion = new Dictionary<string, string>();
                 if (TypeVisorService.GetTypeField(sortBy, typeof(ClientInfoModel)) == null)
                 {
                     validation = false;
-                    errorClientResponseModel.exception.Add(new ExceptionClientResponse() { field = "sortBy", message = $"not find field {sortBy}" }); ;
+                    vlidationExeprion.Add( "sortBy",  $"not find field" );
                 }
 
                 if (limit <= 0)
                 {
                     validation = false;
-                    errorClientResponseModel.exception.Add(new ExceptionClientResponse() { field = "limit", message = "get it limit>0" });
+                    vlidationExeprion.Add("limit", $"get it limit>0");
                 }
 
                 if (!(sortDir.Equals("asc") || sortDir.Equals("desc")))
                 {
                     validation = false;
-                    errorClientResponseModel.exception.Add(new ExceptionClientResponse() { field = "sortDir", message = "get it 'asc'|'desc'" });
+                    vlidationExeprion.Add("sortDir", $"get it 'asc'|'desc");
                 }
 
                 if (!validation)
                 {
-                    errorClientResponseModel.status = 422;
-                    errorClientResponseModel.code = "VALIDATION_EXCEPTION";
-                    //throw new BadRequestException("dfd");
-                    return BadRequest(errorClientResponseModel);
+                    throw new ApplicationException(_converter.WriteJson(vlidationExeprion));
                 }
                 else
                 {
@@ -78,14 +77,11 @@ namespace ApiCRUD.Controllers
                     });
 
                 }
-            }
-            catch (Exception ex)
-            {
-                ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
-                errorClientResponseModel.status = 500;
-                errorClientResponseModel.code = "INTERNAL_SERVER_ERROR";
-                return BadRequest(errorClientResponseModel);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    //throw new ApplicationException(_converter.WriteJson(vlidationExeprion));
+            //}
         }
 
         // GET api/clients/{id}
@@ -93,14 +89,11 @@ namespace ApiCRUD.Controllers
         [HttpPost]
         public async Task<ActionResult> clientCreate([FromBody] ClientInfoViewModel ViewClient)
         {
-            try
-            { 
+            //try
+            //{ 
                 if (!ModelState.IsValid)
                 {
-                    ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
-                    errorClientResponseModel.status = 422;
-                    errorClientResponseModel.code = "VALIDATION_EXCEPTION";
-                    return BadRequest(errorClientResponseModel);
+                    throw new ApplicationException();
                 }
                 ClientInfoModel client = new ClientInfoModel() {
                     id = ViewClient.id, 
@@ -109,21 +102,21 @@ namespace ApiCRUD.Controllers
                     patronymic = ViewClient.patronymic,
                     surname = ViewClient.surname,
                     сhildren = JsonSerializer.Serialize(ViewClient.сhildren),
-                    jobs = JsonSerializer.Serialize(ViewClient.jobs)
+                    //jobs = JsonSerializer.Serialize(ViewClient.jobs)
                 };
                 var id = await _dataManager.ClientRepository.clientCreateAsync(client);
-                if (id == null)
-                    throw new Exception("клиент не создан");
+                //if (id == null)
+                   // throw new Exception("клиент не создан");
                 return Ok(new CreateClientResponce {id= new Guid(id.ToString()) });
             }
-            catch (Exception ex)
-            {
-                ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
-                errorClientResponseModel.code = "INTERNAL_SERVER_ERROR";
-                errorClientResponseModel.status = 500;
-                return BadRequest(errorClientResponseModel);
-            }
-        }
+            //catch (Exception ex)
+            //{
+            //    ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
+            //    errorClientResponseModel.code = "INTERNAL_SERVER_ERROR";
+            //    errorClientResponseModel.status = 500;
+            //    return BadRequest(errorClientResponseModel);
+            //}
+        //}
 
         // POST api/clients
         [HttpGet("{id}")]

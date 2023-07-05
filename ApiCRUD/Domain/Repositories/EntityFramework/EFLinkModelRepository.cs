@@ -36,21 +36,21 @@ namespace ApiCRUD.Domain.Repositories.EntityFramework
                 result = result.OrderByDescending(x => GetPropertyValue(x, sortBy)).ToList();
             
 
-            return result.Take(limit);
+            return result.Take(10);
            
         }
-        public async Task<Guid?> clientCreateAsync(ClientInfoModel client)
+        public async Task<Guid> clientCreateAsync(ClientInfoModel client)
         {
-            try
-            {
+            //try
+            //{
                 var currclient = await _context.ClientEntity.AddAsync(client);
                 _context.SaveChanges();
                 return client.id;
-            }
-            catch
-            {
-                return null;
-            }
+            //}
+            //catch
+            //{
+            //    return null;
+            //}
         }
         public async Task<ClientInfoModel> clientGetAsync(Guid id)
         {
