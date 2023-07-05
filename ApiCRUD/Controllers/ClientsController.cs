@@ -41,56 +41,46 @@ namespace ApiCRUD.Controllers
             //try
             //{
                 bool validation = true;
-                Dictionary<string, string> vlidationExeprion = new Dictionary<string, string>();
+                Dictionary<string, string> vlidationErrorMessage = new Dictionary<string, string>();
                 if (TypeVisorService.GetTypeField(sortBy, typeof(ClientInfoModel)) == null)
                 {
                     validation = false;
-                    vlidationExeprion.Add( "sortBy",  $"not find field" );
+                    vlidationErrorMessage.Add( "sortBy",  $"not find field" );
                 }
 
                 if (limit <= 0)
                 {
                     validation = false;
-                    vlidationExeprion.Add("limit", $"get it limit>0");
+                    vlidationErrorMessage.Add("limit", $"get it limit>0");
                 }
 
                 if (!(sortDir.Equals("asc") || sortDir.Equals("desc")))
                 {
                     validation = false;
-                    vlidationExeprion.Add("sortDir", $"get it 'asc'|'desc");
+                    vlidationErrorMessage.Add("sortDir", $"get it 'asc'|'desc");
                 }
 
                 if (!validation)
                 {
-                    throw new ApplicationException(_converter.WriteJson(vlidationExeprion));
+                    throw new ApplicationException(_converter.WriteJson(vlidationErrorMessage));
                 }
-                else
-                {
-                    var arrayClient = await _dataManager.ClientRepository.clientListAsync(sortBy, (sortDir == "asc" ? true : false), limit, page, search);
-                    
-                    return Ok(new ClientResponseModel()
-                    {
-                        total = 0,
-                        page = page,
-                        limit = limit, 
-                        data = arrayClient.ToArray(),
-                    });
 
-                }
-            //}
-            //catch (Exception ex)
-            //{
-            //    //throw new ApplicationException(_converter.WriteJson(vlidationExeprion));
-            //}
+                var arrayClient = await _dataManager.ClientRepository.clientListAsync(sortBy, (sortDir == "asc" ? true : false), limit, page, search);
+                    
+                return Ok(new ClientResponseModel()
+                {
+                    total = 0,
+                    page = page,
+                    limit = limit, 
+                    data = arrayClient.ToArray(),
+                });   
         }
 
-        // GET api/clients/{id}
 
         [HttpPost]
         public async Task<ActionResult> clientCreate([FromBody] ClientInfoViewModel ViewClient)
         {
-            //try
-            //{ 
+
                 if (!ModelState.IsValid)
                 {
                     throw new ApplicationException();
@@ -109,14 +99,6 @@ namespace ApiCRUD.Controllers
                    // throw new Exception("клиент не создан");
                 return Ok(new CreateClientResponce {id= new Guid(id.ToString()) });
             }
-            //catch (Exception ex)
-            //{
-            //    ErrorClientResponseModel errorClientResponseModel = new ErrorClientResponseModel();
-            //    errorClientResponseModel.code = "INTERNAL_SERVER_ERROR";
-            //    errorClientResponseModel.status = 500;
-            //    return BadRequest(errorClientResponseModel);
-            //}
-        //}
 
         // POST api/clients
         [HttpGet("{id}")]

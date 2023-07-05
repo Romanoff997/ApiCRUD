@@ -41,16 +41,10 @@ namespace ApiCRUD.Domain.Repositories.EntityFramework
         }
         public async Task<Guid> clientCreateAsync(ClientInfoModel client)
         {
-            //try
-            //{
+
                 var currclient = await _context.ClientEntity.AddAsync(client);
                 _context.SaveChanges();
                 return client.id;
-            //}
-            //catch
-            //{
-            //    return null;
-            //}
         }
         public async Task<ClientInfoModel> clientGetAsync(Guid id)
         {

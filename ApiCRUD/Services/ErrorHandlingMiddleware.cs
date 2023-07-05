@@ -37,7 +37,11 @@ namespace ApiCRUD.Services
                         // custom application error
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         errorResponse.status = (int)HttpStatusCode.BadRequest;
-                        errorResponse.code = e.Message;
+                        errorResponse.code = "VALIDATION_EXCEPTION";
+                        foreach (var curr in _converter.ReadJson<Dictionary<string, string>>(error.Message.ToString()))
+                        {
+                            errorResponse.exception.Add(new ExceptionClientResponse() { field = curr.Key, message = curr.Value });
+                        }
                         break;
                     default:
                         // unhandled error
@@ -45,6 +49,7 @@ namespace ApiCRUD.Services
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         errorResponse.status = (int)HttpStatusCode.InternalServerError;
                         errorResponse.code = "INTERNAL_SERVER_ERROR";
+
                         break;
                 }
 
