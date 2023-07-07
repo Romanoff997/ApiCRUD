@@ -1,6 +1,6 @@
 ﻿namespace ApiCRUD.Models
 {
-    public class ExceptionClientResponse
+    public class ValidationExceptions
     {
          public string field { get; set; }
       //"rule": "isEnum",

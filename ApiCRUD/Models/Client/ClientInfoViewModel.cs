@@ -17,7 +17,7 @@ namespace ApiCRUD.Models.Client
         public string? patronymic { get; set; }
         public DateTime dob { get; set; }
         public string[]? children { get; set; }
-        //public string[]? documentIds { get; set; }
+        public string[]? documentIds { get; set; }
         //[Required]
         //public PassportModel? passport { get; set; }
         //////[Required]
@@ -27,11 +27,11 @@ namespace ApiCRUD.Models.Client
 
         public string[]? jobs { get; set; }
 
-        //public int curWorkExp { get; set; }
-        //public string? typeEducation { get; set; }
-        //public float monIncome { get; set; }
-        //public float monExpenses { get; set; }
-        //public string[] communications { get; set; }
+        public int? curWorkExp { get; set; }
+        public string? typeEducation { get; set; }
+        public float? monIncome { get; set; }
+        public float? monExpenses { get; set; }
+        public string[]? communications { get; set; }
 
 
         public DateTime createdAt { get; set; } = DateTime.Now;

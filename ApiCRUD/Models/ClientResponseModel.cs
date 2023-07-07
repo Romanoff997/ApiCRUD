@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CRUD_Сlients_API.Models
 {
-    public class ClientResponseModel
+    public class PaginationResponseBody
     {
 
         public int limit { get; set; }

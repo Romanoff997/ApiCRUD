@@ -41,7 +41,7 @@ namespace ApiCRUD.Helpers
                         errorResponse.code = "VALIDATION_EXCEPTION";
                         foreach (var curr in _converter.ReadJson<Dictionary<string, string>>(error.Message.ToString()))
                         {
-                            errorResponse.exception.Add(new ExceptionClientResponse() { field = curr.Key, message = curr.Value });
+                            errorResponse.exception.Add(new ValidationExceptions() { field = curr.Key, message = curr.Value });
                         }
                         break;
                     default:

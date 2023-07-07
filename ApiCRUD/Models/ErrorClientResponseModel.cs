@@ -4,7 +4,7 @@
     {
         public int status { get; set; }
         public string code { get; set; }
-        public List<ExceptionClientResponse> exception { get; set; } = new List<ExceptionClientResponse>();
+        public List<ValidationExceptions> exception { get; set; } = new List<ValidationExceptions>();
 
 
     }

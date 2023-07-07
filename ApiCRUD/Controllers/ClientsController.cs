@@ -71,7 +71,7 @@ namespace ApiCRUD.Controllers
 
                 IEnumerable <ClientInfoEntities> arrayClient = await _dataManager.ClientRepository.clientListAsync(sortBy, (sortDir == "asc" ? true : false), limit, page, search);
                     
-                return Ok(new ClientResponseModel()
+                return Ok(new PaginationResponseBody()
                 {
                     total = 0,
                     page = page,
