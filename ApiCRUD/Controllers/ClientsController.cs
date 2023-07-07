@@ -89,15 +89,6 @@ namespace ApiCRUD.Controllers
                 {
                     throw new ApplicationException();
                 }
-                //ClientInfoModel client = new ClientInfoModel() {
-                //    id = ViewClient.id,
-                //    name = ViewClient.name,
-                //    dob = ViewClient.dob,
-                //    patronymic = ViewClient.patronymic,
-                //    surname = ViewClient.surname,
-                //    //children = JsonSerializer.Serialize(ViewClient.children),
-                //    //jobs = JsonSerializer.Serialize(ViewClient.jobs)
-                //};
                 var id = await _dataManager.ClientRepository.clientCreateAsync(_mapper.Map(ViewClient));
 
                 return Ok(new CreateClientResponce {id= new Guid(id.ToString()) });
