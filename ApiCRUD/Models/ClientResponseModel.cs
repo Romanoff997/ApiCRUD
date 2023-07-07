@@ -9,6 +9,6 @@ namespace CRUD_Сlients_API.Models
         public int limit { get; set; }
         public int page { get; set; }
         public int total { get; set; }
-        public ClientInfoModel[] data { get; set; }
+        public ClientInfoViewModel[] data { get; set; }
     }
 }

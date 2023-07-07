@@ -7,18 +7,25 @@ namespace ApiCRUD.Models.Client
 {
     public class ClientInfoViewModel
     {
-        [Required]
+        //[Required]
         public Guid id { get; set; }
+       // [Required]
         public string name { get; set; }
+        //[Required]
         public string? surname { get; set; }
+        //[Required]
         public string? patronymic { get; set; }
         public DateTime dob { get; set; }
-        public string[] сhildren { get; set; }
-        //public string[]? documentIds { get; set; }
-        public PassportModel passport { get; set; }
-        public LivingAddressModel livingAddress { get; set; }
-        public RegAddressModel regAddress { get; set; }
-        public string[] jobs { get; set; }
+        public string[]? children { get; set; }
+        public string[]? documentIds { get; set; }
+        //[Required]
+        //public PassportModel? passport { get; set; }
+        //////[Required]
+        //public LivingAddressModel livingAddress { get; set; }
+        ////[Required]
+        //public RegAddressModel regAddress { get; set; }
+
+        public string[]? jobs { get; set; }
 
         //public int curWorkExp { get; set; }
         //public string? typeEducation { get; set; }

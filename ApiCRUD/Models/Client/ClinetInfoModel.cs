@@ -1,4 +1,5 @@
-﻿using CRUD_Сlients_API.Models;
+﻿using ApiCRUD.Services;
+using CRUD_Сlients_API.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
+//using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ApiCRUD.Models.Client
@@ -21,12 +22,12 @@ namespace ApiCRUD.Models.Client
         public string? patronymic { get; set; } 
         public DateTime dob { get; set; }
         [NotMapped]
-        private string[] _сhildren;
+        public string[] _children;
 
-        public string сhildren
+        public string children
         {
-            get => _сhildren != null ? JsonSerializer.Serialize(_сhildren) : null;
-            set => _сhildren = !string.IsNullOrEmpty(value) ? JsonSerializer.Deserialize<string[]>(value) : null;
+            get => _children != null ? new JsonNewtonConverter().WriteJson(_children) : null;
+            set => _children = !string.IsNullOrEmpty(value) ? new JsonNewtonConverter().ReadJson<string[]>(value) : null;
         }
         //[NotMapped]
         //private string[]? _documentIds { get; set; }
@@ -35,15 +36,15 @@ namespace ApiCRUD.Models.Client
         //    get => _documentIds != null ? JsonSerializer.Serialize(_documentIds) : null;
         //    set => _documentIds = !string.IsNullOrEmpty(value) ? JsonSerializer.Deserialize<string[]>(value) : null;
         //}
-        public PassportModel? passport { get; set; }
-        public LivingAddressModel? livingAddress { get; set; }
-        public RegAddressModel? regAddress { get; set; }
+        //public PassportModel? passport { get; set; }
+        //public LivingAddressModel? livingAddress { get; set; }
+        //public RegAddressModel? regAddress { get; set; }
         [NotMapped]
-        private string[]? _jobs { get; set; }
+        public string[]? _jobs { get; set; }
         public string jobs
         {
-            get => _jobs != null ? JsonSerializer.Serialize(_jobs) : null;
-            set => _jobs = !string.IsNullOrEmpty(value) ? JsonSerializer.Deserialize<string[]>(value) : null;
+            get => _jobs != null ? new JsonNewtonConverter().WriteJson(_jobs) : null;
+            set => _jobs = !string.IsNullOrEmpty(value) ? new JsonNewtonConverter().ReadJson<string[]>(value) : null;
         }
         //public int? curWorkExp { get; set; }
         //public string? typeEducation { get; set; }

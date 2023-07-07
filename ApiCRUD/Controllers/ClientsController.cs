@@ -2,6 +2,8 @@
 using ApiCRUD.Models;
 using ApiCRUD.Models.Client;
 using ApiCRUD.Services;
+using ApiCRUD.Services.Interface;
+using AutoMapper;
 using CRUD_Сlients_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -29,10 +31,12 @@ namespace ApiCRUD.Controllers
 
         private readonly DataManager _dataManager;
         private readonly IJsonConverter _converter;
-        public clientsController(DataManager dataManager, JsonNewtonConverter converter)
+        private readonly IMapingService _mapper;
+        public clientsController(DataManager dataManager, JsonNewtonConverter converter, MappingServiceNative mapper)
         {
             _dataManager = dataManager;
             _converter = converter;
+            _mapper=mapper; 
         }
         // GET api/clients
         [HttpGet]
@@ -64,14 +68,14 @@ namespace ApiCRUD.Controllers
                     throw new ApplicationException(_converter.WriteJson(vlidationErrorMessage));
                 }
 
-                var arrayClient = await _dataManager.ClientRepository.clientListAsync(sortBy, (sortDir == "asc" ? true : false), limit, page, search);
+                IEnumerable <ClientInfoModel> arrayClient = await _dataManager.ClientRepository.clientListAsync(sortBy, (sortDir == "asc" ? true : false), limit, page, search);
                     
                 return Ok(new ClientResponseModel()
                 {
                     total = 0,
                     page = page,
                     limit = limit, 
-                    data = arrayClient.ToArray(),
+                    data = _mapper.GetLinkViews(arrayClient.AsQueryable()).ToArray()
                 });   
         }
 
@@ -85,13 +89,13 @@ namespace ApiCRUD.Controllers
                     throw new ApplicationException();
                 }
                 ClientInfoModel client = new ClientInfoModel() {
-                    id = ViewClient.id, 
-                    dob = ViewClient.dob, 
+                    id = ViewClient.id,
                     name = ViewClient.name,
+                    dob = ViewClient.dob,
                     patronymic = ViewClient.patronymic,
                     surname = ViewClient.surname,
-                    сhildren = JsonSerializer.Serialize(ViewClient.сhildren),
-                    //jobs = JsonSerializer.Serialize(ViewClient.jobs)
+                    children = JsonSerializer.Serialize(ViewClient.children),
+                    jobs = JsonSerializer.Serialize(ViewClient.jobs)
                 };
                 var id = await _dataManager.ClientRepository.clientCreateAsync(client);
 
@@ -116,13 +120,13 @@ namespace ApiCRUD.Controllers
 
         // PUT api/clients/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> clientUpdate(Guid id, [FromBody] ClientInfoModel client)
+        public async Task<ActionResult> clientUpdate(Guid id, [FromBody] ClientInfoViewModel _client)
         {
             if (!ModelState.IsValid)
             {
                 throw new ApplicationException();
             }
-
+            ClientInfoModel client = _mapper.Map(_client);
             await _dataManager.ClientRepository.clientUpdateAsync(new Guid(id.ToString()), client);
             return Ok("Данные клиента успешо обновленны");
         }

@@ -4,6 +4,7 @@ using ApiCRUD.Domain.Repositories;
 using ApiCRUD.Services;
 using Microsoft.EntityFrameworkCore;
 using ApiCRUD.Helpers;
+using ApiCRUD.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -20,6 +21,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IClientModelRepository, EFClientModelRepository>();;
 builder.Services.AddTransient<JsonNewtonConverter>();
 builder.Services.AddTransient<DataManager>();
+builder.Services.AddTransient<MappingServiceNative>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

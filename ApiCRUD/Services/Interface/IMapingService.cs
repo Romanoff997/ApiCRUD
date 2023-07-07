@@ -1,17 +1,11 @@
-﻿//using AutoMapper.QueryableExtensions;
-//using AutoMapper;
-//using CRUD_Сlients_API.Domain.Entities;
-//using CRUD_Сlients_API.Models;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿
+using ApiCRUD.Models.Client;
 
-namespace CRUD_Сlients_API.Services.Interface
+namespace ApiCRUD.Services.Interface
 {
-    //public interface IMapingService
-    //{
-    //    public IQueryable<LinkViewModel> GetLinkViews(IQueryable<LinkModel> Links);
-    //}
+    public interface IMapingService
+    {
+        public IQueryable<ClientInfoViewModel> GetLinkViews(IQueryable<ClientInfoModel> Links);
+        public ClientInfoModel Map(ClientInfoViewModel client);
+    }
 }
