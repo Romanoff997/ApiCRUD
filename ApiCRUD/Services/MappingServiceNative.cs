@@ -2,6 +2,7 @@
 using AutoMapper;
 using ApiCRUD.Models.Client;
 using ApiCRUD.Services.Interface;
+using ApiCRUD.Domain.Repositories.Entities;
 
 namespace ApiCRUD.Services
 {
@@ -14,13 +15,13 @@ namespace ApiCRUD.Services
 
         }
 
-        public IQueryable<ClientInfoViewModel> GetLinkViews(IQueryable<ClientInfoModel> Links)
+        public IQueryable<ClientInfoViewModel> GetLinkViews(IQueryable<ClientInfoEntities> Links)
         {
             return Links.ProjectTo<ClientInfoViewModel>(_mapper.ConfigurationProvider);
         }
-        public ClientInfoModel Map(ClientInfoViewModel client)
+        public ClientInfoEntities Map(ClientInfoViewModel client)
         {
-            return _mapper.Map<ClientInfoModel>(client);
+            return _mapper.Map<ClientInfoEntities>(client);
         }
     }
 }

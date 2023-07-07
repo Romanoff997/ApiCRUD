@@ -11,40 +11,36 @@ using System.Text;
 //using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ApiCRUD.Models.Client
+namespace ApiCRUD.Domain.Repositories.Entities
 {
-    public class ClientInfoModel
+    public class ClientInfoEntities
     {
         [Required]
         public Guid id { get; set; }
         public string name { get; set; }
         public string? surname { get; set; }
-        public string? patronymic { get; set; } 
+        public string? patronymic { get; set; }
         public DateTime dob { get; set; }
-        [NotMapped]
-        public string[] _children;
 
-        public string children
+        public string? children
         {
-            get => _children != null ? new JsonNewtonConverter().WriteJson(_children) : null;
-            set => _children = !string.IsNullOrEmpty(value) ? new JsonNewtonConverter().ReadJson<string[]>(value) : null;
+            get;
+            set;
         }
-        //[NotMapped]
-        //private string[]? _documentIds { get; set; }
-        //public string documentIds
+        //public string? documentIds
         //{
-        //    get => _documentIds != null ? JsonSerializer.Serialize(_documentIds) : null;
-        //    set => _documentIds = !string.IsNullOrEmpty(value) ? JsonSerializer.Deserialize<string[]>(value) : null;
+        //    get;
+        //    set;
         //}
         //public PassportModel? passport { get; set; }
         //public LivingAddressModel? livingAddress { get; set; }
         //public RegAddressModel? regAddress { get; set; }
-        [NotMapped]
-        public string[]? _jobs { get; set; }
-        public string jobs
+        //[NotMapped]
+        //public string[]? _jobs { get; set; }
+        public string? jobs
         {
-            get => _jobs != null ? new JsonNewtonConverter().WriteJson(_jobs) : null;
-            set => _jobs = !string.IsNullOrEmpty(value) ? new JsonNewtonConverter().ReadJson<string[]>(value) : null;
+            get;
+            set;
         }
         //public int? curWorkExp { get; set; }
         //public string? typeEducation { get; set; }

@@ -1,5 +1,5 @@
 ﻿using ApiCRUD.Domain.Repositories.Abstract;
-using ApiCRUD.Models.Client;
+using ApiCRUD.Domain.Repositories.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,10 +25,10 @@ namespace ApiCRUD.Domain.Repositories.EntityFramework
             return propertyInfo.GetValue(obj);
         }
     
-    public async Task<IEnumerable<ClientInfoModel>> clientListAsync(string sortBy, bool sortDir, int limit, int page, string search)
+    public async Task<IEnumerable<ClientInfoEntities>> clientListAsync(string sortBy, bool sortDir, int limit, int page, string search)
         {
            
-            List<ClientInfoModel> result = await _context.ClientEntity.ToListAsync();
+            List<ClientInfoEntities> result = await _context.ClientEntity.ToListAsync();
 
             if (sortDir)
                 result =  result.OrderBy(x => GetPropertyValue(x, sortBy)).ToList();
@@ -39,39 +39,25 @@ namespace ApiCRUD.Domain.Repositories.EntityFramework
             return result.Take(10);
            
         }
-        public async Task<Guid> clientCreateAsync(ClientInfoModel client)
+        public async Task<Guid> clientCreateAsync(ClientInfoEntities client)
         {
 
                 var currclient = await _context.ClientEntity.AddAsync(client);
-                _context.SaveChanges();
-                return client.id;
+                await _context.SaveChangesAsync();
+                 return client.id;
         }
-        public async Task<ClientInfoModel> clientGetAsync(Guid id)
+        public async Task<ClientInfoEntities> clientGetAsync(Guid id)
         {
             return await _context.ClientEntity.FirstOrDefaultAsync(x => x.id.Equals(id));
         }
-        public async Task clientUpdateAsync(Guid id, ClientInfoModel client)
+        public async Task clientUpdateAsync(Guid id, ClientInfoEntities client)
         {
-            ClientInfoModel _client = await _context.ClientEntity.FirstOrDefaultAsync(x => x.id.Equals(id));
-            if (_client != null)
-            {
-                //_client.communications = client.communications;
-                //_client.jobs = client.jobs;
-                //_client.name = client.name;
-                //_client.surname = client.surname;
-                //_client.passport = client.passport;
-                //_client.curWorkExp = client.curWorkExp;
-                //_client.сhildren = client.сhildren;
-                //_client.dob = client.dob;
-                
-                _context.SaveChanges();
-            }
-
-            
+            _context.Entry<ClientInfoEntities>(client).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
         public async Task clientDeteleAsync(Guid id)
         {
-            var product = new ClientInfoModel() { id = id };
+            var product = new ClientInfoEntities() { id = id };
             _context.ClientEntity.Attach(product);
             _context.ClientEntity.Remove(product);
             await _context.SaveChangesAsync();

@@ -1,4 +1,6 @@
-﻿using ApiCRUD.Models.Client;
+﻿using ApiCRUD.Domain.Repositories.Entities;
+using ApiCRUD.Models.Client;
+using ApiCRUD.Services;
 using AutoMapper;
 
 namespace ApiCRUD.Mappings
@@ -8,25 +10,17 @@ namespace ApiCRUD.Mappings
         public AutoMapperProfile()
         {
             // CreateRequest -> User
-            CreateMap<ClientInfoViewModel, ClientInfoModel>().ForMember(x=>x._children, opt =>
-                opt.MapFrom(src=>src.children)).
-                ForMember(x=>x._jobs, opt =>
-                opt.MapFrom(src=>src.jobs))
-                .ForAllMembers(x => x.Condition(
-                (src, dest, prop) =>
-                {
-                    // ignore both null & empty string properties
-                    if (prop == null) return false;
-                    if (prop.GetType() == typeof(string) && string.IsNullOrEmpty((string)prop)) return false;
+            CreateMap<ClientInfoViewModel, ClientInfoEntities>()
+                .ForMember(x => x.children, opt =>
+                opt.MapFrom(src => new JsonNewtonConverter().WriteJson(src.children)))
+            .ForMember(x => x.jobs, opt =>
+            opt.MapFrom(src => new JsonNewtonConverter().WriteJson(src.jobs)));
 
-                    // ignore null role
-                    //if (x.DestinationMember.Name == "children") return false;
-                    //if (x.DestinationMember.Name == "jobs") return false;
-
-                    return true;
-                }
-            ));
-            CreateMap<ClientInfoModel, ClientInfoViewModel>();
+            CreateMap<ClientInfoEntities, ClientInfoViewModel>()
+                .ForMember(x => x.children, opt =>
+                opt.MapFrom(src => new JsonNewtonConverter().ReadJson<string[]>(src.children)))
+                .ForMember(x => x.jobs, opt =>
+                opt.MapFrom(src => new JsonNewtonConverter().ReadJson<string[]>(src.jobs)));
 
             // UpdateRequest -> User
             //CreateMap<ClientInfoViewModel, ClientInfoModel>()

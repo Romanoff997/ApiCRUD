@@ -17,7 +17,7 @@ namespace ApiCRUD.Models.Client
         public string? patronymic { get; set; }
         public DateTime dob { get; set; }
         public string[]? children { get; set; }
-        public string[]? documentIds { get; set; }
+        //public string[]? documentIds { get; set; }
         //[Required]
         //public PassportModel? passport { get; set; }
         //////[Required]

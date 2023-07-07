@@ -1,4 +1,5 @@
 ﻿using ApiCRUD.Domain.Repositories;
+using ApiCRUD.Domain.Repositories.Entities;
 using ApiCRUD.Models;
 using ApiCRUD.Models.Client;
 using ApiCRUD.Services;
@@ -45,7 +46,7 @@ namespace ApiCRUD.Controllers
 
                 bool validation = true;
                 Dictionary<string, string> vlidationErrorMessage = new Dictionary<string, string>();
-                if (TypeVisorService.GetTypeField(sortBy, typeof(ClientInfoModel)) == null)
+                if (TypeVisorService.GetTypeField(sortBy, typeof(ClientInfoEntities)) == null)
                 {
                     validation = false;
                     vlidationErrorMessage.Add( "sortBy",  $"not find field" );
@@ -68,7 +69,7 @@ namespace ApiCRUD.Controllers
                     throw new ApplicationException(_converter.WriteJson(vlidationErrorMessage));
                 }
 
-                IEnumerable <ClientInfoModel> arrayClient = await _dataManager.ClientRepository.clientListAsync(sortBy, (sortDir == "asc" ? true : false), limit, page, search);
+                IEnumerable <ClientInfoEntities> arrayClient = await _dataManager.ClientRepository.clientListAsync(sortBy, (sortDir == "asc" ? true : false), limit, page, search);
                     
                 return Ok(new ClientResponseModel()
                 {
@@ -88,16 +89,16 @@ namespace ApiCRUD.Controllers
                 {
                     throw new ApplicationException();
                 }
-                ClientInfoModel client = new ClientInfoModel() {
-                    id = ViewClient.id,
-                    name = ViewClient.name,
-                    dob = ViewClient.dob,
-                    patronymic = ViewClient.patronymic,
-                    surname = ViewClient.surname,
-                    children = JsonSerializer.Serialize(ViewClient.children),
-                    jobs = JsonSerializer.Serialize(ViewClient.jobs)
-                };
-                var id = await _dataManager.ClientRepository.clientCreateAsync(client);
+                //ClientInfoModel client = new ClientInfoModel() {
+                //    id = ViewClient.id,
+                //    name = ViewClient.name,
+                //    dob = ViewClient.dob,
+                //    patronymic = ViewClient.patronymic,
+                //    surname = ViewClient.surname,
+                //    //children = JsonSerializer.Serialize(ViewClient.children),
+                //    //jobs = JsonSerializer.Serialize(ViewClient.jobs)
+                //};
+                var id = await _dataManager.ClientRepository.clientCreateAsync(_mapper.Map(ViewClient));
 
                 return Ok(new CreateClientResponce {id= new Guid(id.ToString()) });
             }
@@ -126,7 +127,7 @@ namespace ApiCRUD.Controllers
             {
                 throw new ApplicationException();
             }
-            ClientInfoModel client = _mapper.Map(_client);
+            ClientInfoEntities client = _mapper.Map(_client);
             await _dataManager.ClientRepository.clientUpdateAsync(new Guid(id.ToString()), client);
             return Ok("Данные клиента успешо обновленны");
         }

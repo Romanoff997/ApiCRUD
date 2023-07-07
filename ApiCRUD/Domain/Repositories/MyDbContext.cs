@@ -1,4 +1,4 @@
-﻿using ApiCRUD.Models.Client;
+﻿using ApiCRUD.Domain.Repositories.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,7 +12,7 @@ namespace ApiCRUD.Domain.Repositories
 
     public class MyDbContext : DbContext
     {
-        public DbSet<ClientInfoModel> ClientEntity { get; set; }
+        public DbSet<ClientInfoEntities> ClientEntity { get; set; }
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
             //Database.EnsureDeleted();
