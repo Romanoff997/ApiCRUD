@@ -14,7 +14,7 @@ namespace ApiCRUD.Domain.Repositories.Abstract
         public  Task<IEnumerable<ClientInfoEntities>> clientListAsync(string sortBy, bool sortDir, int limit, int page, string search);
         public  Task<Guid> clientCreateAsync(ClientInfoEntities client);
         public  Task<ClientInfoEntities> clientGetAsync(Guid id);
-        public  Task clientUpdateAsync(Guid id, ClientInfoEntities client);
+        public  Task clientUpdateAsync( ClientInfoEntities client);
         public  Task clientDeteleAsync(Guid id);
 
     }

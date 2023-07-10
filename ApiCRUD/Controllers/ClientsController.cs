@@ -39,7 +39,8 @@ namespace ApiCRUD.Controllers
             _converter = converter;
             _mapper=mapper; 
         }
-        // GET api/clients
+
+
         [HttpGet]
         public async Task<ActionResult> clientList(string sortBy = "createdAt", string sortDir = "asc", int limit = 10, int page = 1, string? search=null)
         {
@@ -70,13 +71,14 @@ namespace ApiCRUD.Controllers
                 }
 
                 IEnumerable <ClientInfoEntities> arrayClient = await _dataManager.ClientRepository.clientListAsync(sortBy, (sortDir == "asc" ? true : false), limit, page, search);
-                    
+                var data = _mapper.GetLinkViews(arrayClient.AsQueryable()).ToArray();
+
                 return Ok(new PaginationResponseBody()
                 {
                     total = 0,
                     page = page,
                     limit = limit, 
-                    data = _mapper.GetLinkViews(arrayClient.AsQueryable()).ToArray()
+                    data = data
                 });   
         }
 
@@ -89,12 +91,13 @@ namespace ApiCRUD.Controllers
                 {
                     throw new ApplicationException();
                 }
-                var id = await _dataManager.ClientRepository.clientCreateAsync(_mapper.Map(ViewClient));
+                var client = _mapper.MapEntity(ViewClient);
+                var id = await _dataManager.ClientRepository.clientCreateAsync(client);
 
-                return Ok(new CreateClientResponce {id= new Guid(id.ToString()) });
+                return Ok(new CreateClientResponce {id = id});
             }
 
-        // POST api/clients
+
         [HttpGet("{id}")]
         public async Task<ActionResult> clientGet(Guid id)
         {
@@ -105,12 +108,13 @@ namespace ApiCRUD.Controllers
 
             var client = await _dataManager.ClientRepository.clientGetAsync(id);
 
-            return Ok(client);
+            ClientInfoViewModel viewClient = _mapper.MapView(client);
+            return Ok(viewClient);
 
             
         }
 
-        // PUT api/clients/{id}
+
         [HttpPut("{id}")]
         public async Task<ActionResult> clientUpdate(Guid id, [FromBody] ClientInfoViewModel _client)
         {
@@ -118,12 +122,14 @@ namespace ApiCRUD.Controllers
             {
                 throw new ApplicationException();
             }
-            ClientInfoEntities client = _mapper.Map(_client);
-            await _dataManager.ClientRepository.clientUpdateAsync(new Guid(id.ToString()), client);
+            ClientInfoEntities client = _mapper.MapEntity(_client);
+            client.id = id;
+            client.updatedAt = DateTime.UtcNow;
+            await _dataManager.ClientRepository.clientUpdateAsync(client);
             return Ok("Данные клиента успешо обновленны");
         }
 
-        // DELETE api/clients/{id}
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> clientDelete(Guid id)
         {

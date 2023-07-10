@@ -19,9 +19,13 @@ namespace ApiCRUD.Services
         {
             return Links.ProjectTo<ClientInfoViewModel>(_mapper.ConfigurationProvider);
         }
-        public ClientInfoEntities Map(ClientInfoViewModel client)
+        public ClientInfoEntities MapEntity(ClientInfoViewModel client)
         {
             return _mapper.Map<ClientInfoEntities>(client);
+        }
+        public ClientInfoViewModel MapView(ClientInfoEntities client)
+        {
+            return _mapper.Map<ClientInfoViewModel>(client);
         }
     }
 }

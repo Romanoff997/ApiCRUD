@@ -36,7 +36,7 @@ namespace ApiCRUD.Domain.Repositories.EntityFramework
                 result = result.OrderByDescending(x => GetPropertyValue(x, sortBy)).ToList();
             
 
-            return result.Take(10);
+            return result.Take(limit);
            
         }
         public async Task<Guid> clientCreateAsync(ClientInfoEntities client)
@@ -50,7 +50,7 @@ namespace ApiCRUD.Domain.Repositories.EntityFramework
         {
             return await _context.ClientEntity.FirstOrDefaultAsync(x => x.id.Equals(id));
         }
-        public async Task clientUpdateAsync(Guid id, ClientInfoEntities client)
+        public async Task clientUpdateAsync(ClientInfoEntities client)
         {
             _context.Entry<ClientInfoEntities>(client).State = EntityState.Modified;
             await _context.SaveChangesAsync();

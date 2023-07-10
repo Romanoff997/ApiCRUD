@@ -7,6 +7,7 @@ namespace ApiCRUD.Services.Interface
     public interface IMapingService
     {
         public IQueryable<ClientInfoViewModel> GetLinkViews(IQueryable<ClientInfoEntities> Links);
-        public ClientInfoEntities Map(ClientInfoViewModel client);
+        public ClientInfoEntities MapEntity(ClientInfoViewModel client);
+        public ClientInfoViewModel MapView(ClientInfoEntities client);
     }
 }

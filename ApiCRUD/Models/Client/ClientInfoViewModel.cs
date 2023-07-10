@@ -34,7 +34,7 @@ namespace ApiCRUD.Models.Client
         public string[]? communications { get; set; }
 
 
-        public DateTime createdAt { get; set; } = DateTime.Now;
+        public DateTime createdAt { get; set; }
         public DateTime updatedAt { get; set; }
     }
 }
