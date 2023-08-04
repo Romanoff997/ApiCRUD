@@ -12,8 +12,8 @@ namespace ApiCRUD.Mappings
             // CreateRequest -> User
             CreateMap<ClientInfoViewModel, ClientInfoEntities>()
 
-            .ForMember(x => x.children, opt =>
-                 opt.MapFrom(src => new JsonNewtonConverter().WriteJson(src.children)))
+            //.ForMember(x => x.children, opt =>
+            //     opt.MapFrom(src => new JsonNewtonConverter().WriteJson(src.children)))
             .ForMember(x => x.jobs, opt =>
                   opt.MapFrom(src => new JsonNewtonConverter().WriteJson(src.jobs)))
             .ForMember(x => x.documentIds, opt =>
@@ -42,8 +42,8 @@ namespace ApiCRUD.Mappings
 
 
             CreateMap<ClientInfoEntities, ClientInfoViewModel>()
-                    .ForMember(x => x.children, opt =>
-                         opt.MapFrom(src => new JsonNewtonConverter().ReadJson<string[]>(src.children)))
+                    //.ForMember(x => x.children, opt =>
+                    //     opt.MapFrom(src => new JsonNewtonConverter().ReadJson<string[]>(src.children)))
                     .ForMember(x => x.jobs, opt =>
                          opt.MapFrom(src => new JsonNewtonConverter().ReadJson<string[]>(src.jobs)))
                     .ForMember(x => x.documentIds, opt =>

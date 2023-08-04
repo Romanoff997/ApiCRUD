@@ -14,7 +14,7 @@ namespace ApiCRUD.Helpers
         private readonly ILogger _logger;
         private readonly IJsonConverter _converter;
 
-        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger, JsonNewtonConverter converter)
+        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger, IJsonConverter converter)
         {
             _next = next;
             _logger = logger;
@@ -38,11 +38,11 @@ namespace ApiCRUD.Helpers
                         // custom application error
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         errorResponse.status = (int)HttpStatusCode.BadRequest;
-                        errorResponse.code = "VALIDATION_EXCEPTION";
-                        foreach (var curr in _converter.ReadJson<Dictionary<string, string>>(error.Message.ToString()))
-                        {
-                            errorResponse.exception.Add(new ValidationExceptions() { field = curr.Key, message = curr.Value });
-                        }
+                        errorResponse.code = "APPLICATION_EXCEPTION";//"VALIDATION_EXCEPTION";
+                        //foreach (var curr in _converter.ReadJson<Dictionary<string, string>>(error.Message.ToString()))
+                        //{
+                        //    errorResponse.exception.Add(new ValidationExceptions() { field = curr.Key, message = curr.Value });
+                        //}
                         break;
                     default:
                         // unhandled error

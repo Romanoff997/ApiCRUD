@@ -11,11 +11,12 @@ namespace ApiCRUD.Domain.Repositories.Abstract
 {
     public interface IClientModelRepository
     {
-        public  Task<IEnumerable<ClientInfoEntities>> clientListAsync(string sortBy, bool sortDir, int limit, int page, string search);
-        public  Task<Guid> clientCreateAsync(ClientInfoEntities client);
-        public  Task<ClientInfoEntities> clientGetAsync(Guid id);
-        public  Task clientUpdateAsync( ClientInfoEntities client);
-        public  Task clientDeteleAsync(Guid id);
+        public  Task<IEnumerable<ClientInfoEntities>> ClientListAsync(string sortBy, bool sortDir, int limit, int page, string search);
+        public  Task<Guid> ClientCreateAsync(ClientInfoEntities client);
+        public  Task<ClientInfoEntities> ClientGetAsync(Guid id);
+        public  Task ClientUpdateAsync( ClientInfoEntities client);
+        public  Task ClientDeteleAsync(Guid id);
+        public  Task ClientSoftDeteleAsync(Guid id);
 
     }
 }

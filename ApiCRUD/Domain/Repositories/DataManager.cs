@@ -9,7 +9,6 @@ namespace ApiCRUD.Domain.Repositories
 {
     public class DataManager
     {
-
         public IClientModelRepository ClientRepository { get; set; }
 
         public DataManager(IClientModelRepository linkRepository)
